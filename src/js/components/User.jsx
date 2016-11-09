@@ -14,6 +14,17 @@ var User = React.createClass({
     getInitialState: function() {
         return {};
     },
+    
+    componentDidMount: function() {
+        this.fetchData()
+    },
+    
+    componentDidUpdate: function(prevProps) {
+      if(this.props.params.username !== prevProps.username) {
+          this.fetchData();
+      }  
+        
+    },
     /*
     This method will be called by React after the first render. It's a perfect place to load
     data with AJAX. This User component gets mounted in the DOM as soon as the URL is /user/:username
@@ -26,10 +37,10 @@ var User = React.createClass({
     the data -- in the callback -- we call `setState` to put the user data in our state. This will trigger a re-render.
     When `render` gets called again, `this.state.user` exists and we get the user info display instead of "LOADING..."
     */
-    componentDidMount: function() {
+    fetchData: function() {
         var that = this; // What's this?? Make sure you remember or understand what this line does
         
-        $.getJSON(`https://api.github.com/users/${this.props.params.username}`)
+        $.getJSON(`https://api.github.com/users/${this.props.params.username}?access_token=f231a12d51caea95fc8a4ce8714c2727f3c3a2e8`)
             .then(
                 function(user) {
                     // Why that.setState instead of this.setState??
@@ -94,6 +105,7 @@ var User = React.createClass({
                         {stats.map(this.renderStat)}              
                     </ul>
                 </div>
+                {this.props.children}
             </div>
         );
     }
